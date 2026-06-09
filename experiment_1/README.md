@@ -70,15 +70,35 @@ directly from `../original_code/examples/gpt2/`:
 
 ---
 
-## Quick Start (RunPod / Single GPU)
+## Quick Start
+
+### Google Colab
+
+```python
+# Cell 1: clone & install
+!git clone https://github.com/MJforge/Adam-mini.git
+!pip install -e /content/Adam-mini/original_code   # setup.py lives here
+!pip install datasets tiktoken tqdm wandb
+
+# Cell 2: prepare data
+%cd /content/Adam-mini/experiment_1
+!python data/openwebtext/prepare_mini.py
+
+# Cell 3: run training
+!python train_gpt2.py config/train_gpt2_small_1gpu.py \
+    --algorithm=adam_mini \
+    --comment=gpt2_small_adam_mini_nhead12
+```
+
+### RunPod / Single GPU
 
 ```bash
 # 1. Clone the repository
 git clone https://github.com/MJforge/Adam-mini.git
 cd Adam-mini
 
-# 2. Install the adam_mini package
-pip install -e .
+# 2. Install the adam_mini package (setup.py is inside original_code/)
+pip install -e original_code
 
 # 3. Install additional dependencies
 pip install datasets tiktoken tqdm wandb
