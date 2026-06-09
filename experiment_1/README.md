@@ -26,8 +26,9 @@ This experiment is based on the original Adam-mini repository:
 - Observe relative optimizer behavior under constrained hardware conditions
 
 ### W&B Report
-Comprehensive training metrics, validation loss comparisons, and memory efficiency analysis for Experiments 1-1 and 1-2 conducted in this folder are available in the official report below
-[![W&B Report](https://img.shields.io/badge/Weights_&_Biases-Report-yellow?style=for-the-badge&logo=WeightsAndBiases)]([INSERT_YOUR_W&B_REPORT_LINK_HERE](https://wandb.ai/clairdemin-seoul/adam-mini-reproduction/reports/Adam-mini-vs-AdamW-on-GPT-2-125M---VmlldzoxNzA3NjgwNw))
+Comprehensive training metrics, validation loss comparisons, and memory efficiency analysis for Experiments 1-1 and 1-2 conducted in this folder are available in the official report below.
+
+[![W&B Report](https://img.shields.io/badge/Weights_&_Biases-Report-yellow?style=for-the-badge&logo=WeightsAndBiases)](https://wandb.ai/clairdemin-seoul/adam-mini-reproduction/reports/Adam-mini-vs-AdamW-on-GPT-2-125M---VmlldzoxNzA3NjgwNw)
 
 ### Environment Comparison
 
