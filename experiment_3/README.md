@@ -1,4 +1,4 @@
-# Adam-mini 재현
+# 논문의 동기 실험 두 개(Case Study 1, 2)와 Throughput 실험에 대하여 작업한 폴더
 
 ICLR 2025 논문 [Adam-mini: Use Fewer Learning Rates To Gain More](https://arxiv.org/abs/2406.16793) 재현 실험.
 
