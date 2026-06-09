@@ -66,7 +66,6 @@ import torch
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.distributed import init_process_group, destroy_process_group
 
-# resolve paths relative to this script so it works regardless of cwd
 _script_dir = os.path.dirname(os.path.abspath(__file__))
 _orig_gpt2  = os.path.normpath(os.path.join(_script_dir, '..', 'original_code', 'examples', 'gpt2'))
 sys.path.insert(0, _orig_gpt2)

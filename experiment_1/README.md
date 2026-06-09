@@ -52,18 +52,56 @@ Comprehensive training metrics, validation loss comparisons, and memory efficien
 ```
 experiment_1/                          # this folder
 ├── train_gpt2.py                      # main training script (modified)
+├── model.py                           # GPT-2 model definition (copied from original_code/;
+│                                      #   only change: removed dead `import algorithms`)
 ├── config/
 │   └── train_gpt2_small_1gpu.py       # hyperparameter config for single-GPU run
 ├── data/
 │   └── openwebtext/
 │       └── prepare_mini.py            # data preparation script (1% OWT subset)
 └── README.md
-
-# The following files are referenced directly from original_code/ (no duplication):
-#   ../original_code/examples/gpt2/model.py
-#   ../original_code/examples/gpt2/configurator.py
-#   ../original_code/examples/gpt2/logger.py
 ```
+
+`logger.py` and `configurator.py` are **not copied**. `train_gpt2.py` references them
+directly from `../original_code/examples/gpt2/`:
+
+- `logger` — loaded via `sys.path` insert (no custom dependencies)
+- `configurator.py` — loaded via `exec(open(path).read())`, not through the import system
+
+---
+
+## Quick Start (RunPod / Single GPU)
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/MJforge/Adam-mini.git
+cd Adam-mini
+
+# 2. Install the adam_mini package
+pip install -e .
+
+# 3. Install additional dependencies
+pip install datasets tiktoken tqdm wandb
+
+# 4. Prepare the data (1% OWT subset, ~80M tokens)
+cd experiment_1
+python data/openwebtext/prepare_mini.py
+#   → creates data/openwebtext/train.bin and val.bin
+
+# 5. Run training (from experiment_1/)
+# Adam-mini
+python train_gpt2.py config/train_gpt2_small_1gpu.py \
+    --algorithm=adam_mini \
+    --comment=gpt2_small_adam_mini_nhead12
+
+# AdamW
+python train_gpt2.py config/train_gpt2_small_1gpu.py \
+    --algorithm=adamw \
+    --comment=gpt2_small_adamw_nhead12
+```
+
+> All commands must be run from inside `experiment_1/`. The `config/` path in the
+> run command is relative to the current working directory.
 
 ---
 
@@ -78,7 +116,7 @@ Changes made to the original `examples/gpt2/train_gpt2.py`:
 | Custom x-axis | All W&B metrics use `tokens_B` (Tokens in Billions) as step metric |
 | Gradient norm logging | Captured `grad_norm` from `clip_grad_norm_` for W&B logging |
 | Removed unused imports | Removed `argparse`, `json`, `io_utils`, `torch_optimizer`, `SummaryWriter` |
-| Path resolution | Added `sys.path` insertion to reference `original_code/examples/gpt2/` |
+| Dependency resolution | `sys.path` insertion → `../original_code/examples/gpt2/` for `logger`; `configurator.py` loaded via `exec(open(path).read())` |
 
 ---
 
@@ -104,8 +142,9 @@ numpy.memmap random sampling → GPU transfer → forward / backward
 ### Run Data Preparation
 
 ```bash
+# from repository root
 cd experiment_1
-pip install datasets tiktoken tqdm
+pip install datasets tiktoken tqdm wandb
 python data/openwebtext/prepare_mini.py
 ```
 
@@ -138,7 +177,9 @@ seed                        = 1337
 ### Run Commands
 
 ```bash
+# from repository root
 cd experiment_1
+pip install -e ..   # installs adam_mini package
 
 # Adam-mini
 python train_gpt2.py config/train_gpt2_small_1gpu.py \
@@ -185,17 +226,14 @@ If A ≠ B → Adam-mini performance depends on head count (partitioning granula
 ### Run Commands
 
 ```bash
+# from repository root
+cd experiment_1
+
 # Adam-mini, n_head=6
 python train_gpt2.py config/train_gpt2_small_1gpu.py \
     --algorithm=adam_mini \
     --n_head=6 \
     --comment=gpt2_small_adam_mini_nhead6
-
-# AdamW, n_head=6
-python train_gpt2.py config/train_gpt2_small_1gpu.py \
-    --algorithm=adamw \
-    --n_head=6 \
-    --comment=gpt2_small_adamw_nhead6
 ```
 
 `n_embd=768` is divisible by 6 (head_size=128), so no other changes are needed.
