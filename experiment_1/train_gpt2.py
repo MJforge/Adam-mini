@@ -68,10 +68,16 @@ from torch.distributed import init_process_group, destroy_process_group
 
 _script_dir = os.path.dirname(os.path.abspath(__file__))
 _orig_gpt2  = os.path.normpath(os.path.join(_script_dir, '..', 'original_code', 'examples', 'gpt2'))
-sys.path.insert(0, _orig_gpt2)   # for logger.py
-sys.path.insert(0, _script_dir)  # for model.py — must come first to shadow original_code version
+sys.path.insert(0, _orig_gpt2)  # for logger.py
 
-from model import GPTConfig, GPT
+# Load model.py by explicit path to avoid picking up original_code version via sys.path
+import importlib.util as _ilu
+_spec = _ilu.spec_from_file_location("model", os.path.join(_script_dir, "model.py"))
+_mod  = _ilu.module_from_spec(_spec)
+_spec.loader.exec_module(_mod)
+GPTConfig = _mod.GPTConfig
+GPT       = _mod.GPT
+
 from adam_mini import Adam_mini
 import logger
 import wandb
